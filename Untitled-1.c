@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-06-29 20:27:18
- * @LastEditTime: 2021-06-30 10:15:19
+ * @LastEditTime: 2021-06-30 21:02:10
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \myCanvas\Untitled-1.c
@@ -33,6 +33,6 @@ int fun(int num){
 void main()
 {
     int a=7;
-    printf("%d",fun(a));
+    printf("%d",3>2);
     getchar();
 }
