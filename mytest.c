@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-05-23 21:13:40
- * @LastEditTime: 2021-06-28 15:23:03
+ * @LastEditTime: 2021-07-02 15:47:00
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \myCanvas\mytest.c
@@ -103,27 +103,18 @@ void logInt(int num)
 }
 int main()
 {
-	// SeqList *L = initList();
-	// insertList(L, 0, 22);
-	// insertList(L, 0, 33);
-	// for (int i = 0; i < 10; i++)
-	// {
-	// 	pushList(L, i);
-	// }
-	// showList(L);
-	// logInt(popList(L));
-	// logInt(shiftList(L));
-	// pushList(L, 44);
-	// unshiftList(L, 55);
-	// showList(L);
-	for(int y = 0;y<5;y++){
-		for (int x = 0; x<5;x++){
-			if(x==3){
-				break;
-			}
-			printf("%d:%d\t",x,y);
-		}
-		printf("\n");
+	SeqList *L = initList();
+	insertList(L, 0, 22);
+	insertList(L, 0, 33);
+	for (int i = 0; i < 10; i++)
+	{
+		pushList(L, i);
 	}
+	showList(L);
+	logInt(popList(L));
+	logInt(shiftList(L));
+	pushList(L, 44);
+	unshiftList(L, 55);
+	showList(L);
 	system("pause");
 }
