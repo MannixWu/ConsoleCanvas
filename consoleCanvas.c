@@ -4,24 +4,22 @@
 #include <windows.h>
 #include <string.h>
 
-#define WIDTH 105
-#define HEIGHT 96
+#define WIDTH 60
+#define HEIGHT 60
 #define FRAME 70
-#define max(a, b) ((a) > (b) ? (a) : (b))
-#define min(a, b) ((a) < (b) ? (a) : (b))
+#define TRUE 1
+#define FALSE 0
+// #define max(a, b) ((a) > (b) ? (a) : (b))
+// #define min(a, b) ((a) < (b) ? (a) : (b))
 #define PI 3.1415
+#define LOG(num)(printf("%d\n",num))
 
 int canvas[HEIGHT][WIDTH];
 char canvasStr[(HEIGHT + 2) * (WIDTH + 2) * 2 + HEIGHT];
 char GetCh(int data);
 char ch[] = {' ', '`', '.', '^', ',', ':', '~', '"', '<', '!', 'c', 't', '+', '{', 'i', '7', '?', 'u', '3', '0', 'p', 'w', '4', 'A', '8', 'D', 'X', '%', '#', 'H', 'W', 'M'};
 char num[] = {0, 5, 7, 9, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47, 49, 51, 53, 55, 59, 61, 63, 66, 68, 70};
-//new commit
 
-
-
-
-;
 //绘制函数
 
 void showCanvas();
@@ -39,32 +37,131 @@ int distance(int x1, int y1, int x2, int y2);
 double round(double num);
 void swap(int *a, int *b);
 
+//Life Game
+int map1[HEIGHT][WIDTH];
+int map2[HEIGHT][WIDTH];
+int getCellCount();
+int getCell();
 int main()
 {
-  // //程序内容
-  // int i = 0;
-  // while (1)
-  // {
-  //   //clearCanvas(0);
-  //   int f = (i++) % FRAME;
-  //   for (int y = 0; y < HEIGHT; y++)
-  //   {
-  //     for (int x = 0; x < WIDTH; x++)
-  //     {
-  //       drawPoint(x, y, rick[f][y][x]);
-  //     }
-  //   }
-  //   showCanvas();
-  //   Sleep(70);
-  // }
-
-  drawRect(3,3,14,14,40);
-  showCanvas();
+  for (int y = 0; y < HEIGHT; y++)
+  {
+    for (int x = 0; x < WIDTH; x++)
+    {
+      map1[y][x] = 0;
+      map2[y][x] = 0;
+    }
+  }
+  //===============预设===============//
+  //随机地图
+  srand((unsigned)time(NULL));
+  for (int y = 0; y < HEIGHT; y++)
+  {
+    for (int x = 0; x < WIDTH; x++)
+    {
+      map1[y][x] = (rand()%3==0)?70:0;
+    }
+  }
+  //滑翔伞
+  // map1[3][3] = 70;
+  // map1[3][4] = 70;
+  // map1[3][5] = 70;
+  // map1[2][5] = 70;
+  // map1[1][4] = 70;
+  //---------------预设---------------//
+  //程序内容
+  while (TRUE){
+    //遍历地图每个细胞
+    for (int y = 0; y < HEIGHT; y++)
+    {
+      for (int x = 0; x < WIDTH; x++)
+      {
+        //对每个细胞计算周边邻居
+        int cellCount = getCellCount(x, y);
+        //细胞为存活状态
+        if (map1[y][x] == 70)
+        {
+          if (cellCount == 2 || cellCount == 3)
+          {
+            map2[y][x] = 70;
+          }
+          else
+          {
+            map2[y][x] -= 5;
+            if(map2[y][x]<0){
+              map2[y][x]=0;
+            }
+          }
+        }
+        //细胞为死亡状态
+        else
+        {
+          if (cellCount == 3)
+          {
+            map2[y][x] = 70;
+          }
+          else{
+            map2[y][x] -= 5;
+            if(map2[y][x]<0){
+              map2[y][x]=0;
+            }
+          }
+        }
+      }
+    }
+    //输出本次地图，并且把新结果当下一次的地图
+    for (int y = 0; y < HEIGHT; y++)
+    {
+      for (int x = 0; x < WIDTH; x++)
+      {
+        drawPoint(x,y,map1[y][x]);
+        map1[y][x] = map2[y][x];
+      }
+    }
+    Sleep(10);
+    showCanvas();
+  }
   //避免程序自己退出
   system("pause");
   return 0;
 }
+//获取当前位置细胞邻居数量
+int getCellCount(int x, int y)
+{
+  int sum = 0;
 
+  for (int yy = -1; yy <= 1; yy++)
+  {
+    for (int xx = -1; xx <= 1; xx++)
+    {
+      if (!(xx==0&&yy==0))
+      {
+        int cx = xx + x;
+        int cy = yy + y;
+        while (cx < 0)
+        {
+          cx += WIDTH;
+        }
+        while (cx >= WIDTH)
+        {
+          cx -= WIDTH;
+        }
+        while (cy < 0)
+        {
+          cy += HEIGHT;
+        }
+        while (cy >= HEIGHT)
+        {
+          cy -= HEIGHT;
+        }
+        if(map1[cy][cx]==70){
+          sum++ ;
+        }
+      }
+    }
+  }
+  return sum;
+}
 /***************************************************************************
  * @brief        绘制线段
  * @param     x1    点1横坐标
@@ -398,6 +495,11 @@ void swap(int *a, int *b)
   *a = *a ^ *b;
 }
 
+/**
+ * @description: 四舍五入
+ * @param {double} 输入的数
+ * @return {*}  取整的结果
+ */
 double round(double num)
 {
   return floor(num + 0.5);
