@@ -3,12 +3,14 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <string.h>
+#include <time.h>
 
 #define WIDTH 60
 #define HEIGHT 60
 #define FRAME 70
 #define TRUE 1
 #define FALSE 0
+
 // #define max(a, b) ((a) > (b) ? (a) : (b))
 // #define min(a, b) ((a) < (b) ? (a) : (b))
 #define PI 3.1415
@@ -29,7 +31,7 @@ void clearCanvas(int color);
 void drawRect(int x1, int y1, int x2, int y2, int color);
 void drawLine(int x1, int y1, int x2, int y2, int color);
 void drawTria(int x1, int y1, int x2, int y2, int x3, int y3, int color);
-
+void full_screen();
 //数学函数
 
 int between(int num, int minNum, int maxNum);
@@ -44,6 +46,7 @@ int getCellCount();
 int getCell();
 int main()
 {
+  full_screen();
   for (int y = 0; y < HEIGHT; y++)
   {
     for (int x = 0; x < WIDTH; x++)
@@ -59,7 +62,7 @@ int main()
   {
     for (int x = 0; x < WIDTH; x++)
     {
-      map1[y][x] = (rand()%3==0)?70:0;
+      map1[y][x] = (rand()%2==0)?70:0;
     }
   }
   //滑翔伞
@@ -503,4 +506,21 @@ void swap(int *a, int *b)
 double round(double num)
 {
   return floor(num + 0.5);
+}
+
+/*******************************************************************************
+ * 全屏控制台窗口
+ * 取消标题栏及边框
+ ******************************************************************************/
+void full_screen()
+{   
+    HWND hwnd = GetForegroundWindow();
+    int cx = GetSystemMetrics(SM_CXSCREEN);            /* 屏幕宽度 像素 */
+    int cy = GetSystemMetrics(SM_CYSCREEN);            /* 屏幕高度 像素 */
+
+    LONG l_WinStyle = GetWindowLong(hwnd,GWL_STYLE);   /* 获取窗口信息 */
+    /* 设置窗口信息 最大化 取消标题栏及边框 */
+    SetWindowLong(hwnd,GWL_STYLE,(l_WinStyle | WS_POPUP | WS_MAXIMIZE) & ~WS_CAPTION & ~WS_THICKFRAME & ~WS_BORDER);
+
+    SetWindowPos(hwnd, HWND_TOP, 0, 0, cx, cy, 0);
 }
